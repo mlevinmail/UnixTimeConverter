@@ -1,10 +1,6 @@
 #include "UnixTime.h"
 #include <stdint.h>
 
-
-using namespace std;
-
-
 uint32_t UnixTime::ConvertToUnixTime(DateTime *dateTime) {
 	// Calculating the number of seconds to the begining of the same year
 
