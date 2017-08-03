@@ -77,13 +77,11 @@ DateTime UnixTime::ConvertFromUnixTime(uint32_t uTimestamp) {
 	uint32_t secondsSinceTheDayStarted = secondsSinceBeginingOfTheYear - daysSinceBeginingOfTheYear * SecondsInDay;
 	
 	dateTime.Hour = secondsSinceTheDayStarted / SecondsInHour;
+	uint16_t secondsSinceTheHourStarted = secondsSinceTheDayStarted - dateTime.Hour* SecondsInHour;
+	dateTime.Minute = secondsSinceTheHourStarted / SecondsInMinute;
+	uint8_t secondsSinceMinuteStarted = secondsSinceTheHourStarted - dateTime.Minute * SecondsInMinute;
+	dateTime.Second = secondsSinceMinuteStarted;
 
-	dateTime.Minute = secondsSinceTheDayStarted / ;
-
-	dateTime.Second = 
-
-	cout << "The answer is " << endl;
-	cout << secondsSinceTheDayStarted << endl;
 
 
 	return dateTime;
