@@ -52,9 +52,9 @@ DateTime UnixTime::ConvertFromUnixTime(uint32_t uTimestamp) {
 	dtime.Minute = 0;
 	dtime.Second = 0;
 
-
-	uint32_t secondsSinceBeginingOfTheYear = uTimestamp - ConvertToUnixTime(&dtime);
 	// Finding out how many seconds has passed since the year started
+	uint32_t secondsSinceBeginingOfTheYear = uTimestamp - ConvertToUnixTime(&dtime);
+	// How many Days passed since the begining of the year.
 	uint32_t daysSinceBeginingOfTheYear = (secondsSinceBeginingOfTheYear) / SecondsInDay;
 
 
@@ -117,7 +117,15 @@ uint16_t UnixTime::GetDayNumFromYearStart(uint8_t day, uint8_t month, bool isLea
 	return currentDayCount + day;
 }
 
-
+//
+//How to determine whether a year is a leap year
+//
+//To determine whether a year is a leap year, follow these steps :
+//If the year is evenly divisible by 4, go to step 2. Otherwise, go to step 5.
+//If the year is evenly divisible by 100, go to step 3. Otherwise, go to step 4.
+//If the year is evenly divisible by 400, go to step 4. Otherwise, go to step 5.
+//The year is a leap year(it has 366 days).
+//The year is not a leap year(it has 365 days).
 
 bool UnixTime::isLeapYear(uint16_t year) {
 	bool case1 = year % 4 == 0;
