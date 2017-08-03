@@ -1,6 +1,9 @@
 #include "UnixTime.h"
 #include <stdint.h>
+#include <iostream>
+#include <string>
 
+using namespace std;
 
 
 uint32_t UnixTime::ConvertToUnixTime(DateTime *dateTime) {
@@ -33,93 +36,89 @@ uint32_t UnixTime::ConvertToUnixTime(DateTime *dateTime) {
 
 // The function doing some heavy lifting to convert unix time to DateTime
 
-DateTime UnixTime::ConvertFromUnixTime(uint32_t unixTime) {
+DateTime UnixTime::ConvertFromUnixTime(uint32_t uTimestamp) {
 	DateTime dateTime;
+	// Unix timespamp / hours. Ignoring the decimal part will give the year 
+	uint16_t yearSinceEpoch = uTimestamp / HoursInYear;
 
-	// Calculating number of years
-	uint16_t currentYear = 1970;
-	uint32_t currentSecond = 0;
+	uint16_t numberOfLeapYears = (yearSinceEpoch + 1970 - 1969) / 4;
 
-
-	// Finding the year
-	while (currentSecond + SecondsInLeapYear <= unixTime)
-	{
-		if (isLeapYear(currentYear))
-			currentSecond += SecondsInLeapYear;
-		else
-			currentSecond += SecondsInNonLeapYear;
-		currentYear++;
-	}
-
-	dateTime.Year = currentYear;
-	auto isCurrentLeapYear = isLeapYear(dateTime.Year);
-	uint8_t currentMonth = 1;
-
-	uint8_t daycount = 1;
-
-	// Finding the month
-	while (currentSecond + SecondsInDay * 31 <= unixTime) {
-		auto days = daysInMonth(currentMonth, isCurrentLeapYear);
-		auto secondsInMonth = SecondsInDay * days;
-
-		if (currentSecond + secondsInMonth <= unixTime)
-			currentSecond += secondsInMonth;
+	// Converting this year begining to the unix time, so it could be subtructed from the 
+	// epoch time to find out how many seconds passed since the begining of the year
+	DateTime dtime;
+	dtime.Year = 1970 + yearSinceEpoch;
+	dtime.Month = 1;
+	dtime.Day = 1;
+	dtime.Hour = 0;
+	dtime.Minute = 0;
+	dtime.Second = 0;
 
 
-		currentMonth++;
-
-	}
-
-
-	dateTime.Month = currentMonth;
-
-	auto days = daysInMonth(currentMonth, isCurrentLeapYear);
-	uint8_t currentDay = 1;
+	uint32_t secondsSinceBeginingOfTheYear = uTimestamp - ConvertToUnixTime(&dtime);
+	// Finding out how many seconds has passed since the year started
+	uint32_t daysSinceBeginingOfTheYear = (secondsSinceBeginingOfTheYear) / SecondsInDay;
 
 
-	while (currentSecond + SecondsInDay <= unixTime) {
-		currentSecond += SecondsInDay;
-		currentDay++;
+	bool isCurrentLeapYear = isLeapYear(dtime.Year);
+	
+	// Since the daysSinceBeginingOfTheYear is rounded to the nearest integer one day must be added
+	// as the daysSinceBeginingOfTheYear = how many full days passed since the begining of the year, not 
+	// including the hours, minutes, and seconds.
 
-		daycount++;
-
-		if (daycount == days)
-			break;
-	}
-
-	dateTime.Day = currentDay;
-
-	uint8_t currentHour = 0;
-
-	while (currentSecond + SecondsInHour <= unixTime) {
-
-		currentSecond += SecondsInHour;
-		currentHour++;
+	dateTime.Month = GetMonthByDay(daysSinceBeginingOfTheYear + 1, isCurrentLeapYear);
+	dateTime.Day = GetMonthDayByYearDay(daysSinceBeginingOfTheYear + 1, isCurrentLeapYear);
+	dateTime.Year = yearSinceEpoch + 1970;
 
 
-	}
+	// Find out how many seconds passed since the beginng of the day
 
-	dateTime.Hour = currentHour;
-	uint8_t currentMinute = 0;
+	
+	// Calculated diffirence is how much seconds passed since the day began
+	uint32_t secondsSinceTheDayStarted = secondsSinceBeginingOfTheYear - daysSinceBeginingOfTheYear * SecondsInDay;
+	
+	dateTime.Hour = secondsSinceTheDayStarted / SecondsInHour;
 
-	while (currentSecond + SecondsInMinute <= unixTime) {
-		currentSecond += SecondsInMinute;
-		currentMinute++;
-	}
+	dateTime.Minute = secondsSinceTheDayStarted / ;
 
-	dateTime.Minute = currentMinute;
+	dateTime.Second = 
 
-	uint8_t seconds = unixTime - currentSecond;
-
-
-	dateTime.Second = seconds;
-
+	cout << "The answer is " << endl;
+	cout << secondsSinceTheDayStarted << endl;
 
 
 	return dateTime;
 }
 
 
+uint8_t UnixTime::GetMonthByDay(uint16_t daynum, bool isLeapYear) {	
+	uint16_t currentDay = 0;
+	for (int month = 1; month <= 12; month++) {
+		currentDay += daysInMonth(month, isLeapYear);
+
+		if (currentDay >= daynum)
+			return month;
+	}
+	return -1;
+};
+
+uint8_t UnixTime::GetMonthDayByYearDay(uint16_t yearDay, bool isLeapYear) {
+	// Determain the number of days right before the begining of the month
+	int16_t currentDay = 0;
+	for (int month = 1; month < GetMonthByDay(yearDay, isLeapYear); month++) {
+		currentDay += daysInMonth(month, isLeapYear);
+	} // the diffirence will be the day number in a month
+	return yearDay - (currentDay);
+};
+
+uint16_t UnixTime::GetDayNumFromYearStart(uint8_t day, uint8_t month, bool isLeapYear) {
+	uint8_t currentDayCount = 0;
+	// itterating through months to add all the days before the last month
+	for (int i = 1; i < month; i++) {
+		currentDayCount += daysInMonth(i, isLeapYear);
+	}
+	// Adding the days to all the previous months
+	return currentDayCount + day;
+}
 
 
 
