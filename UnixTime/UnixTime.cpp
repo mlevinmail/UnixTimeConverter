@@ -1,7 +1,9 @@
 #include "UnixTime.h"
 #include <stdint.h>
 
-uint32_t UnixTime::ConvertToUnixTime(DateTime *dateTime) {
+
+
+uint32_t UnixTime::ConvertToUnixTime(const DateTime *dateTime) {
 	// Calculating the number of seconds to the begining of the same year
 
 	uint32_t secondsFromYearStart = 0;
@@ -87,7 +89,6 @@ uint8_t UnixTime::GetMonthByDay(uint16_t daynum, bool isLeapYear) {
 	uint16_t currentDay = 0;
 	for (int month = 1; month <= 12; month++) {
 		currentDay += daysInMonth(month, isLeapYear);
-
 		if (currentDay >= daynum)
 			return month;
 	}
@@ -117,12 +118,11 @@ uint16_t UnixTime::GetDayNumFromYearStart(uint8_t day, uint8_t month, bool isLea
 //How to determine whether a year is a leap year
 //
 //To determine whether a year is a leap year, follow these steps :
-//If the year is evenly divisible by 4, go to step 2. Otherwise, go to step 5.
-//If the year is evenly divisible by 100, go to step 3. Otherwise, go to step 4.
-//If the year is evenly divisible by 400, go to step 4. Otherwise, go to step 5.
-//The year is a leap year(it has 366 days).
-//The year is not a leap year(it has 365 days).
-
+//1. If the year is evenly divisible by 4, go to step 2. Otherwise, go to step 5.
+//2. If the year is evenly divisible by 100, go to step 3. Otherwise, go to step 4.
+//3. If the year is evenly divisible by 400, go to step 4. Otherwise, go to step 5.
+//4. The year is a leap year(it has 366 days).
+//5. The year is not a leap year(it has 365 days).
 bool UnixTime::isLeapYear(uint16_t year) {
 	bool case1 = year % 4 == 0;
 	bool case2 = year % 100 == 0;

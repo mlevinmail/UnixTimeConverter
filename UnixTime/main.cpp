@@ -6,9 +6,6 @@
 
 using namespace std;
 
-
-
-
 UnixTime unixTime;
 
 int main(void) {
@@ -30,16 +27,14 @@ int main(void) {
 
 	// Part 2 Converting from unix time
 
+
+
 	// The function to convert from unix time will return a DateTime data structure
 	DateTime bigevent;
 	bigevent = unixTime.ConvertFromUnixTime(626634000);
 
+
 	cout << "On the year " << bigevent.Year << " day " << to_string(bigevent.Day)<< " month " << to_string(bigevent.Month) << " at " << to_string(bigevent.Hour) << ":" << to_string(bigevent.Minute)<< ":" << to_string(bigevent.Second)<< " the big wall came down " << endl;
-
-
-
-
-
 	getchar();
 }
 

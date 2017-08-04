@@ -17,7 +17,7 @@ class UnixTime {
 public:
 
 	// Converts DateTime to a unix time
-	uint32_t   ConvertToUnixTime(DateTime *dateTime);
+	uint32_t   ConvertToUnixTime(const DateTime *dateTime);
 
 
 	// Converts Unix time to a DateTime
@@ -46,14 +46,16 @@ private:
 	uint8_t daysInMonth(uint8_t month, bool isLeapYear);
 
 
+
 	// Precalculated time 
 	const uint32_t SecondsInNonLeapYear = 31536000;
-	const uint32_t SecondsInLeapYear = 31622400;
-	const uint32_t HoursInYear = 31436000;
-	const uint32_t SecondsInDay = 86400;	
-	const uint16_t SecondsInHour = 3600;
-	const uint16_t MinutesInDay = 1440;
+	const uint32_t SecondsInLeapYear    = 31622400;
+	const uint32_t HoursInYear          = 31436000;
+	const uint32_t SecondsInDay         = 86400;	
+	const uint16_t SecondsInHour        = 3600;
+	const uint16_t MinutesInDay         = 1440;
+	const uint8_t  SecondsInMinute      = 60;
 
-	const uint8_t  SecondsInMinute = 60;
+
 };
 
