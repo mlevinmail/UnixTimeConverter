@@ -1,7 +1,10 @@
 # UnixTimeConverter
-Multi platform library that converts unix time to human readable date time and back
+Multi platform library that converts unix time to human readable date time and back. When I was looking on the internet I could not find a lightweight library that only have to methods:
+    - Convert to unix time
+    - Convert from unix time
+    
+Most libraries include tons of other functionality or tied to a certain platform. Therefore, it could be to "heavy" or simply impossible to run on microcontroller (AVR, ARM etc...)
 
-Converts Unix time to human readable date time and human readable time to Unix time. The project is done in a Visual library, however the
-library is portable to other platforms such as Arduino, stm32 and more. The library is portable to any platform that supports uint32_t.
+The only requirement for the library is to be able to include stdint.h where uint8_t, uint16_t and uint32_t are defined.
 
 
